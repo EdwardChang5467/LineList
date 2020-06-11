@@ -15,7 +15,7 @@ typedef struct
     int length;
 } SqList;
 
-/*获取元素操作*/
+/*获取元素操作GetElem()*/
 #define OK 1
 #define ERROR 0
 #define TRUE 1
@@ -35,6 +35,47 @@ Status GetElem(SqList L, int i, ElemType *e)
         return ERROR;
     }
     *e = L.data[i - 1];
+    return OK;
+}
+
+/*
+插入元素操作ListInsert()
+
+算法思路：
+插入位置不合理则抛出异常；
+线性表长度大于或等于数组长度，则抛出异常或动态增加容量；
+从最后一个元素开始向前遍历到第 i 个位置，分别将他们向后移动一个位置；
+将要插入元素填入位置 i 中；
+
+初始条件：顺序线性表L已存在，1<=i && i<=ListInsert(L);
+操作结果：在L中第i个位置之前插入新的数据元素e，L的长度加1；
+*/
+
+Status ListInsert(SqList *L, int i, ElemType e)
+{
+    int k;
+    /* 顺序线性表已满 */
+    if (L->length == MAXSIZE)
+    {
+        return ERROR;
+    }
+    /* 当i不在范围内时 */
+    if (i < 1 || i > L->length + 1)
+    {
+        return ERROR;
+    }
+    /* 若插入数据的位置不在表尾 */
+    if (i <= L->length)
+    {
+        /*将要插入位置后的数据元素向后移动一位*/
+        for (k = L->length - 1; k >= i - 1; k--)
+        {
+            L->data[k + 1] = L->data[k];
+        }
+    }
+    /*将新元素插入*/
+    L->data[i - 1] = e;
+    L->length++;
     return OK;
 }
 
