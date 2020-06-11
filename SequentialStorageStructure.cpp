@@ -79,13 +79,68 @@ Status ListInsert(SqList *L, int i, ElemType e)
     return OK;
 }
 
+/*
+删除元素操作ListDelete()
+算法思路：
+如果删除位置不合理，抛出异常；
+取出删除元素；
+从删除元素位置遍历到最后一个元素位置，分别将他们都向前移动一个位置；
+表长减1；
+
+初始条件：顺序线性表L已存在，1<=i && i<=ListLength(L)
+操作结果：删除L的第i个元素，并用e返回其值，L的长度减1
+*/
+
+Status ListDelete(SqList *L, int i, ElemType *e)
+{
+    int k;
+    /*线性表为空*/
+    if (L->length == 0)
+    {
+        return ERROR;
+    }
+    /*删除位置不正确*/
+    if (i < 1 || i > L->length)
+    {
+        return ERROR;
+    }
+    *e = L->data[i - 1];
+
+    /*如果删除不是最后位置*/
+    if (i < L->length)
+    {
+        for (k = i; k < L->length; k++)
+        {
+            L->data[k - 1] = L->data[k];
+        }
+    }
+    L->length--;
+    return OK;
+}
+
+//用主函数来test
 int main()
 {
-    SqList List;
+    SqList List = {{1, 3, 5, 7}, 4};
     ElemType *p = new ElemType;
-    List.length = 4;
-    List.data[0] = 2;
-    cout << GetElem(List, 1, p) << endl;
+
+    cout << "using GetElem()" << endl;
+    GetElem(List, 2, p);
+    cout << *p << endl;
+
+    cout << "using ListInsert()" << endl;
+    ListInsert(&List, 3, 4);
+    for (int j = 0; j < List.length; j++)
+    {
+        cout << List.data[j] << endl;
+    }
+
+    cout << "using ListDelete()" << endl;
+    ListDelete(&List, 4, p);
+    for (int l = 0; l < List.length; l++)
+    {
+        cout << List.data[l] << endl;
+    }
     delete p;
     return 0;
 }
